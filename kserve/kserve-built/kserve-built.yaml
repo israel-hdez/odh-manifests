@@ -2397,7 +2397,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kserve/serving-cert
+    service.beta.openshift.io/inject-cabundle: "true"
     controller-gen.kubebuilder.io/version: v0.12.0
   name: inferenceservices.serving.kserve.io
 spec:
@@ -20371,6 +20371,8 @@ kind: Service
 metadata:
   name: kserve-webhook-server-service
   namespace: kserve
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: kserve-webhook-server-cert
 spec:
   ports:
   - port: 443
@@ -20453,33 +20455,11 @@ spec:
           defaultMode: 420
           secretName: kserve-webhook-server-cert
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: serving-cert
-  namespace: kserve
-spec:
-  commonName: kserve-webhook-server-service.kserve.svc
-  dnsNames:
-  - kserve-webhook-server-service.kserve.svc
-  issuerRef:
-    kind: Issuer
-    name: selfsigned-issuer
-  secretName: kserve-webhook-server-cert
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: selfsigned-issuer
-  namespace: kserve
-spec:
-  selfSigned: {}
----
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kserve/serving-cert
+    service.beta.openshift.io/inject-cabundle: "true"
   creationTimestamp: null
   name: inferenceservice.serving.kserve.io
 webhooks:
@@ -20538,7 +20518,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kserve/serving-cert
+    service.beta.openshift.io/inject-cabundle: "true"
   creationTimestamp: null
   name: inferencegraph.serving.kserve.io
 webhooks:
@@ -20568,7 +20548,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kserve/serving-cert
+    service.beta.openshift.io/inject-cabundle: "true"
   creationTimestamp: null
   name: inferenceservice.serving.kserve.io
 webhooks:
@@ -20598,7 +20578,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kserve/serving-cert
+    service.beta.openshift.io/inject-cabundle: "true"
   creationTimestamp: null
   name: trainedmodel.serving.kserve.io
 webhooks:

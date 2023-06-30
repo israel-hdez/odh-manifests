@@ -9,7 +9,6 @@ resources:
 patches:
   - path: ./kserve-controller-manager-patch.yaml
   - path: ./inferenceservice-config-patch.yaml
-  - path: ./kserve-webhook-certificate-patch.yaml
 
   # Remove invalid CA bundles
   - patch: |-
@@ -28,20 +27,6 @@ patches:
   - patch: |-
       - op: remove
         path: "/webhooks/0/clientConfig/caBundle"
-    target:
-      kind: ValidatingWebhookConfiguration
-
-  # Inject CA bundle into webhooks
-  - patch: |-
-      - op: add
-        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
-        value: "opendatahub/serving-cert"
-    target:
-      kind: MutatingWebhookConfiguration
-  - patch: |-
-      - op: add
-        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
-        value: "opendatahub/serving-cert"
     target:
       kind: ValidatingWebhookConfiguration
 
