@@ -1,0 +1,83 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - github.com/opendatahub-io/kserve/config/default?ref=master
+
+patches:
+  - path: ./rm-clusterservingruntimes.yaml
+  - path: ./rm-certmanager-cert.yaml
+  - path: ./rm-certmanager-issuer.yaml
+
+  - patch: |-
+      - op: remove
+        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: inferenceservice.serving.kserve.io
+  - patch: |-
+      - op: remove
+        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: inferencegraph.serving.kserve.io
+  - patch: |-
+      - op: remove
+        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: trainedmodel.serving.kserve.io
+  - patch: |-
+      - op: remove
+        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
+    target:
+      kind: MutatingWebhookConfiguration
+      name: inferenceservice.serving.kserve.io
+  - patch: |-
+      - op: remove
+        path: "/metadata/annotations/cert-manager.io~1inject-ca-from"
+    target:
+      kind: CustomResourceDefinition
+      name: inferenceservices.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1inject-cabundle"
+        value: "true"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: inferenceservice.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1inject-cabundle"
+        value: "true"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: inferencegraph.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1inject-cabundle"
+        value: "true"
+    target:
+      kind: ValidatingWebhookConfiguration
+      name: trainedmodel.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1inject-cabundle"
+        value: "true"
+    target:
+      kind: MutatingWebhookConfiguration
+      name: inferenceservice.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1inject-cabundle"
+        value: "true"
+    target:
+      kind: CustomResourceDefinition
+      name: inferenceservices.serving.kserve.io
+  - patch: |-
+      - op: add
+        path: "/metadata/annotations/service.beta.openshift.io~1serving-cert-secret-name"
+        value: "kserve-webhook-server-cert"
+    target:
+      kind: Service
+      name: kserve-webhook-server-service

@@ -1,0 +1,34 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../kserve-built
+  - network-policies.yaml
+
+patches:
+  - path: ./kserve-controller-manager-patch.yaml
+  - path: ./inferenceservice-config-patch.yaml
+
+  # Remove invalid CA bundles
+  - patch: |-
+      - op: remove
+        path: "/spec/conversion/webhook/clientConfig/caBundle"
+    target:
+      kind: CustomResourceDefinition
+      name: inferenceservices.serving.kserve.io
+  - patch: |-
+      - op: remove
+        path: "/webhooks/0/clientConfig/caBundle"
+      - op: remove
+        path: "/webhooks/1/clientConfig/caBundle"
+    target:
+      kind: MutatingWebhookConfiguration
+  - patch: |-
+      - op: remove
+        path: "/webhooks/0/clientConfig/caBundle"
+    target:
+      kind: ValidatingWebhookConfiguration
+
+configurations:
+  - params.yaml
