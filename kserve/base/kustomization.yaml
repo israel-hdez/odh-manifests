@@ -64,5 +64,3 @@ vars:
     kind: ConfigMap
     name: kserve-parameters
 
-commonLabels:
-  app.kubernetes.io/part-of: kserve
