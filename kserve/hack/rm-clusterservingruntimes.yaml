@@ -1,6 +1,0 @@
-# This patch removes the CRD for clusterservingruntimes
-$patch: delete
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: clusterservingruntimes.serving.kserve.io
